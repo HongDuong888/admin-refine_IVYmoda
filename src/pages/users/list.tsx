@@ -10,7 +10,7 @@ export const UserList = () => {
 
   const data = (tableProps.dataSource as any) ?? [];
 
-  
+  // Lấy SĐT mặc định từ shipping_addresses
   const getDefaultPhone = (record: any) => {
     const defaultAddress = record?.shipping_addresses?.find(
       (addr: any) => addr.isDefault

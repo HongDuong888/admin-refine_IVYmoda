@@ -1,44 +1,48 @@
-import { Authenticated,GitHubBanner, Refine, WelcomePage } from "@refinedev/core";
+import { Authenticated, GitHubBanner, Refine } from "@refinedev/core";
 import { DevtoolsPanel, DevtoolsProvider } from "@refinedev/devtools";
 import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
 
-import { 
+import {
   ErrorComponent,
   ThemedLayoutV2,
   ThemedSiderV2,
-  useNotificationProvider
- } from "@refinedev/antd";
+  useNotificationProvider,
+} from "@refinedev/antd";
 import "@refinedev/antd/dist/reset.css";
 
-import dataProvider, {
-  GraphQLClient,
-  liveProvider,
-} from "@refinedev/nestjs-query";
 import routerBindings, {
   CatchAllNavigate,
-  NavigateToResource,
   DocumentTitleHandler,
+  NavigateToResource,
   UnsavedChangesNotifier,
 } from "@refinedev/react-router";
 import { default as simpleRestProvider } from "@refinedev/simple-rest";
-import { App as AntdApp } from "antd";
-import { createClient } from "graphql-ws";
-import { BrowserRouter,Outlet, Route, Routes } from "react-router";
-import { authProvider } from "./authProvider";
-import { ColorModeContextProvider } from "./contexts/color-mode";
 import { axiosInstance } from "./axiosInstance";
+import { App as AntdApp } from "antd";
+import { BrowserRouter, Outlet, Route, Routes } from "react-router";
+import { authProvider } from "./authProvider";
+import { Header } from "./components/header";
+import { ColorModeContextProvider } from "./contexts/color-mode";
 
-const API_URL = "https://api.nestjs-query.refine.dev/graphql";
-const WS_URL = "wss://api.nestjs-query.refine.dev/graphql";
-
-const gqlClient = new GraphQLClient(API_URL);
-const wsClient = createClient({ url: WS_URL });
+import { Login } from "./pages/login";
+import {
+  ProductList,
+  ProductCreate,
+  ProductEdit,
+  ProductShow,
+} from "./pages/products";
+import {
+  ProductVariantList,
+  ProductVariantCreate,
+  ProductVariantEdit,
+  ProductVariantShow,
+} from "./pages/productsVariant";
+import { UserEdit, UserList, UserShow } from "./pages/users";
 
 export const customDataProvider = simpleRestProvider(
   `${import.meta.env.VITE_API_URL}/admin`,
   axiosInstance
-); 
-
+);
 function App() {
   return (
     <BrowserRouter>
@@ -130,15 +134,7 @@ function App() {
                       index
                       element={<NavigateToResource resource="categories" />}
                     />
-                    <Route path="/stats">
-                      <Route index element={<StatsDashboard />} />
-                    </Route>
-                    <Route path="/categories">
-                      <Route index element={<CategoryList />} />
-                      <Route path="create" element={<CategoryCreate />} />
-                      <Route path="edit/:id" element={<CategoryEdit />} />
-                      <Route path="show/:id" element={<CategoryShow />} />
-                    </Route>
+                    
                     <Route path="/products">
                       <Route index element={<ProductList />} />
                       <Route path="create" element={<ProductCreate />} />
@@ -150,11 +146,6 @@ function App() {
                       <Route path="create" element={<ProductVariantCreate />} />
                       <Route path="edit/:id" element={<ProductVariantEdit />} />
                       <Route path="show/:id" element={<ProductVariantShow />} />
-                    </Route>
-                    <Route path="/orders">
-                      <Route index element={<OrderList />} />
-                      <Route path="edit/:id" element={<OrderEdit />} />
-                      <Route path="show/:id" element={<OrderShow />} />
                     </Route>
                     <Route path="/users">
                       <Route index element={<UserList />} />
@@ -176,6 +167,7 @@ function App() {
                     <Route path="/login" element={<Login />} />
                   </Route>
                 </Routes>
+
                 <RefineKbar />
                 <UnsavedChangesNotifier />
                 <DocumentTitleHandler />
